@@ -18,8 +18,16 @@ library(boot)
 # Get BC Natural Resource Districts (NRD) and intersect with M*D10A1 snow duration samples from Bevignton et al. (2018)
 ##############################################################################################
 
+set.seed(101)
+
 #Get BC NRD as sf object
 nrd <- nr_districts()
+
+
+nrd_plt <- ggplot() + geom_sf(data = nrd, aes( fill = ORG_UNIT))+labs(fill="Org. Unit")
+nrd_plt
+ggsave(filename = 'nrd_map',plot = nrd_plt ,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/Maps/',width=8.5,height = 8.5,units = c('in'))
+
 
 # Bevington et al. (2018) M*D10A1 Snow Duration Samples (local copy)
 sd_samp_pts<-st_read('~/Dropbox/FLNRO/Projects/snow_summaries_note/SD_Random_Samples.gpkg')
@@ -37,11 +45,11 @@ box_sdon <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sdon)) + geom_boxplot(outlier.
 box_sdon
 ggsave(filename = 'box_sdon',plot = box_sdon,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/BoxPlots/',width=8.5,height = 8.5,units = c('in'))
 
-box_sdoff <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sdoff)) + geom_boxplot(outlier.size=.1) + coord_flip() + labs(y="M*D10A1 Snow Off Date (Days Since 1-Sep)", x = "")
+box_sdoff <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sdoff)) + geom_boxplot(outlier.size=.1)+ theme_classic() + coord_flip() + labs(y="M*D10A1 Snow Off Date (Days Since 1-Sep)", x = "")
 box_sdoff
 ggsave(filename = 'box_sdoff',plot = box_sdoff,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/BoxPlots/',width=8.5,height = 8.5,units = c('in'))
 
-box_sddur <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sddur)) + geom_boxplot(outlier.size=.1) + coord_flip() + labs(y="M*D10A1 Snow Duration (Days)", x = "")
+box_sddur <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sddur)) + geom_boxplot(outlier.size=.1) + theme_classic()+ coord_flip() + labs(y="M*D10A1 Snow Duration (Days)", x = "")
 box_sddur
 ggsave(filename = 'box_sddur',plot = box_sddur,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/BoxPlots/',width=8.5,height = 8.5,units = c('in'))
 
@@ -51,8 +59,8 @@ ggsave(filename = 'box_sddur',plot = box_sddur,device = 'png',path = '~/Dropbox/
 
 #Get mean and std. dev. of SD metrics by NRD
 sd_sumry <- sd_by_nrd %>%
-   group_by(dname_shrt) %>%
-   summarise(mean_sdon = mean(sdon, na.rm = TRUE), sd_sdon = sd(sdon, na.rm = TRUE),mean_sdoff = mean(sdoff, na.rm = TRUE), sd_sdoff = sd(sdoff, na.rm = TRUE),mean_sddur = mean(sddur, na.rm = TRUE), sd_sddur = sd(sddur, na.rm = TRUE))
+  group_by(dname_shrt) %>%
+  summarise(mean_sdon = mean(sdon, na.rm = TRUE), sd_sdon = sd(sdon, na.rm = TRUE),mean_sdoff = mean(sdoff, na.rm = TRUE), sd_sdoff = sd(sdoff, na.rm = TRUE),mean_sddur = mean(sddur, na.rm = TRUE), sd_sddur = sd(sddur, na.rm = TRUE))
 
 #Write summary table to working directory
 write_csv(sd_sumry %>% as_tibble() %>% select(dname_shrt,mean_sdon,sd_sdon,mean_sdoff, sd_sdoff, mean_sddur, sd_sddur), path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Tables/sumry_tab.csv')
@@ -140,8 +148,22 @@ ggsave(filename = 'sd_sddur_map',plot = sd_dur_sd_plt ,device = 'png',path = '~/
 
 
 
+##############################################################################################
+#Anual Analysis 
+##############################################################################################
 
-  
+#Get mean and std. dev. of SD metrics by NRD
+sd_anual_sumry <- sd_by_nrd %>%
+  group_by(year) %>%
+  summarise(mean_sdon = mean(sdon, na.rm = TRUE), sd_sdon = sd(sdon, na.rm = TRUE),mean_sdoff = mean(sdoff, na.rm = TRUE), sd_sdoff = sd(sdoff, na.rm = TRUE),mean_sddur = mean(sddur, na.rm = TRUE), sd_sddur = sd(sddur, na.rm = TRUE))
 
 
 
+box_anual_sdon <- ggplot(sd_by_nrd, aes(x=year,group=year, y=sdon)) + geom_boxplot(outlier.size=.1) + theme_classic()+ labs(y="M*D10A1 Snow On Date (Days Since 1-Sep)", x = "")
+box_anual_sdon
+
+box_anual_sdoff <- ggplot(sd_by_nrd, aes(x=year,group=year, y=sdoff)) + geom_boxplot(outlier.size=.1) + theme_classic()+ labs(y="M*D10A1 Snow Off Date (Days Since 1-Sep)", x = "")
+box_sdoff
+
+box_anual_sddur <- ggplot(sd_by_nrd, aes(x=year,group=year, y=sddur)) + geom_boxplot(outlier.size=.1) + theme_classic()+ labs(y="M*D10A1 Snow Duration (Days)", x = "")
+box_anual_sddur
