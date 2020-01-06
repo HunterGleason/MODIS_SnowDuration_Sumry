@@ -47,11 +47,11 @@ sd_by_nrd <- sd_samp_pts %>%
 #Create Box-Plots for SDon, SDoff and SDdur by NRD, save copies to working directory.
 ##############################################################################################
 
-box_sdon <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sdon)) + geom_boxplot(outlier.size=.1) + theme_classic() +coord_flip() + labs(y="M*D10A1 Snow On Date (Days Since 1-Sep)", x = "")
+box_sdon <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sdon)) + geom_boxplot(outlier.size=.1) + theme_classic() +coord_flip() + labs(y="M*D10A1 Snow Onset Date (Days Since 1-Sep)", x = "")
 box_sdon
 ggsave(filename = 'box_sdon',plot = box_sdon,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/BoxPlots/',width=8.5,height = 8.5,units = c('in'))
 
-box_sdoff <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sdoff)) + geom_boxplot(outlier.size=.1)+ theme_classic() + coord_flip() + labs(y="M*D10A1 Snow Off Date (Days Since 1-Sep)", x = "")
+box_sdoff <- ggplot(sd_by_nrd, aes(x=dname_shrt, y=sdoff)) + geom_boxplot(outlier.size=.1)+ theme_classic() + coord_flip() + labs(y="M*D10A1 Snow Meltoff Date (Days Since 1-Sep)", x = "")
 box_sdoff
 ggsave(filename = 'box_sdoff',plot = box_sdoff,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/BoxPlots/',width=8.5,height = 8.5,units = c('in'))
 
@@ -160,12 +160,12 @@ ggsave(filename = 'sd_sddur_map',plot = sd_dur_sd_plt ,device = 'png',path = '~/
 
 
 #Generate boxplots of all snow metrics by hydrologic year, save to project dir
-box_anual_sdon <- ggplot(sd_by_nrd, aes(x=year,group=year, y=sdon)) + geom_boxplot(outlier.size=.1) + theme_classic()+ labs(y="M*D10A1 Snow On Date (Days Since 1-Sep)", x = "")
+box_anual_sdon <- ggplot(sd_by_nrd, aes(x=year,group=year, y=sdon)) + geom_boxplot(outlier.size=.1) + theme_classic()+ labs(y="M*D10A1 Snow Onset Date (Days Since 1-Sep)", x = "")
 box_anual_sdon
 ggsave(filename = 'box_sdon_yrly',plot = box_anual_sdon,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/BoxPlots/',width=8.5,height = 8.5,units = c('in'))
 
 
-box_anual_sdoff <- ggplot(sd_by_nrd, aes(x=year,group=year, y=sdoff)) + geom_boxplot(outlier.size=.1) + theme_classic()+ labs(y="M*D10A1 Snow Off Date (Days Since 1-Sep)", x = "")
+box_anual_sdoff <- ggplot(sd_by_nrd, aes(x=year,group=year, y=sdoff)) + geom_boxplot(outlier.size=.1) + theme_classic()+ labs(y="M*D10A1 Snow Meltoff Date (Days Since 1-Sep)", x = "")
 box_anual_sdoff
 ggsave(filename = 'box_sdoff_yrly',plot = box_anual_sdoff,device = 'png',path = '~/Dropbox/FLNRO/Projects/snow_summaries_note/Figures/BoxPlots/',width=8.5,height = 8.5,units = c('in'))
 
