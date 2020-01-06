@@ -1,0 +1,35 @@
+# Copyright 2019 Province of British Columbia
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and limitations under the License.
+
+```{r}
+library(tidyverse)
+library(bcmaps)
+library(sf)
+
+nrd <- nr_districts() # NR Districts
+#hz <- hydrozones() # Hydrozones
+#bec <- bec() # ALL BEC
+#bec_zone <- bec %>% group_by(ZONE) # ALL BEC by Zone
+#bec_subzone <- bec %>% group_by(SUBZONE) # ALL BEC by SubZone
+```
+
+
+sd_samp_pts<-st_read('C:/Users/hgleason/Dropbox/FLNRO/Projects/snow-dur-analysis/R/snow_summaries_note/SD_Random_Samples.gpkg')
+
+plot(sd_samp_pts)
+
+
+sd_by_nrd <- sd_samp_pts %>%
+  st_join(nrd, join = st_intersects) %>%
+  group_by(DISTRICT_NAME) %>%
+  summarise(mean_sddur = mean(sddur))
+  
