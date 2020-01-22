@@ -237,17 +237,21 @@ library(egg)
   sd_mean_fall <- merge(fall, sd_mean)
 
 # Raw lm
-  sd_mean_fall_lm <- sd_mean_fall %>%
+  sd_mean_fall_lm <-
+    sd_mean_fall %>%
     dplyr::group_by(dname_shrt,index) %>%
     do(broom::tidy(lm(sd_dur~value, data = ., na.action = na.omit))) %>%
-    dplyr::filter(term != "(Intercept)") %>% 
+    # do(broom::augment(lm(sd_dur~value, data = ., na.action = na.omit))) #%>%
+    # do(broom::glance(lm(sd_dur~value, data = ., na.action = na.omit))) %>%
+    # dplyr::filter(term != "(Intercept)") %>% 
     mutate(p.value.c = cut(p.value, c(-Inf,0.01,0.05,Inf),labels = c("**","*","")))
   
 # Normalized lm
   sd_mean_fall_nlm <- sd_mean_fall %>%
     dplyr::group_by(dname_shrt,index) %>%
     do(broom::tidy(lm(sd_dur~norm, data = ., na.action = na.omit))) %>%
-    dplyr::filter(term != "(Intercept)") %>% 
+    # do(broom::glance(lm(sd_dur~value, data = ., na.action = na.omit))) %>%
+    # dplyr::filter(term != "(Intercept)") %>% 
     mutate(p.value.c = cut(p.value, c(-Inf,0.01,0.05,Inf),labels = c("<0.01","<0.05",">=0.05")))
 
 # Normalized lm add GEO
@@ -272,11 +276,12 @@ library(egg)
   ggsave(filename = 'lm_maps_norm2.png', device = 'png',path = 'Figures/',width=15,height = 15,units = c('in'))
 
 # Table of Raw lm
-  sd_mean_fall_lm_table <- sd_mean_fall_lm %>% 
-    dplyr::select(-statistic, -std.error, -p.value, -term) %>% 
+  sd_mean_fall_lm_table <-
+    sd_mean_fall_lm %>% 
+    dplyr::select(-statistic, -std.error, -p.value) %>%
     pivot_wider(names_from = index, values_from = c(estimate, p.value.c))
 
-  write.csv(sd_mean_fall_lm_table, "Tables/sd_mean_fall_lm.csv")  
+  write.csv(sd_mean_fall_lm_table, "Tables/sd_mean_fall_lm_intercept.csv")  
 
     
 ##############################################################################################
